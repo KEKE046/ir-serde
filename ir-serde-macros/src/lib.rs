@@ -263,7 +263,7 @@ pub fn ir_serde_derive(input: TokenStream) -> TokenStream {
                 let MetaInfo { keyword, .. } = extract_attrs(&mut v.attrs);
                 let fields_pat = extract_fields_pat(&v.fields);
                 let (ser_impl, der_impl) = impl_fields(&mut v.fields);
-                let keyword = keyword.unwrap_or_else(|| name.to_string());
+                let keyword = keyword.unwrap_or_else(|| name.to_string().to_lowercase());
                 ser.push(quote! {
                     Self::#name #fields_pat => {
                         ser.serialize_keyword(#keyword);
