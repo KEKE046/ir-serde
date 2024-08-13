@@ -1,0 +1,21 @@
+[package]
+name = "ir-serde"
+version = "0.1.0"
+edition = "2021"
+authors = [ "Kexing Zhou <zhoukexing@pku.edu.cn>"]
+license = "MIT"
+description = "Simpler IR serialization and deserialization"
+
+[features]
+default = ["derive", "num", "default_impl"]
+default_impl = ["dep:logos", "dep:codespan-reporting"]
+derive = ["dep:ir-serde-macros"]
+num = ["dep:num"]
+test = ["default"]
+
+[dependencies]
+logos = { version = "0.14.1", optional = true }
+codespan-reporting = { version = "0.11.1", optional = true }
+num = { version = "0.4.3", features = ["num-bigint"], optional=true }
+ir-serde-macros = { path = "../ir-serde-macros", optional = true }
+slotmap = { version = "1.0.7", optional = true }
