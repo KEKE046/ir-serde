@@ -830,9 +830,8 @@ mod tests {
 
     #[derive(Debug, PartialEq, Eq, IRSerde)]
     enum TestEnum<T> {
-        #[keyword(c)]
         A(T),
-        #[keyword(d)]
+        #[keyword(B)]
         B(T, T),
         C {
             #[punct(lsquare)]

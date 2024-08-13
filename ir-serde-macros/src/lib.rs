@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
@@ -258,12 +260,16 @@ pub fn ir_serde_derive(input: TokenStream) -> TokenStream {
             let syn::DataEnum { variants, .. } = e;
             let mut ser = vec![];
             let mut der = vec![];
+            let mut used_keywords = HashSet::new();
             for mut v in variants {
                 let name = &v.ident;
                 let MetaInfo { keyword, .. } = extract_attrs(&mut v.attrs);
                 let fields_pat = extract_fields_pat(&v.fields);
                 let (ser_impl, der_impl) = impl_fields(&mut v.fields);
                 let keyword = keyword.unwrap_or_else(|| name.to_string().to_lowercase());
+                if !used_keywords.insert(keyword.clone()) {
+                    panic!("Duplicate keyword: {}", keyword);
+                }
                 ser.push(quote! {
                     Self::#name #fields_pat => {
                         ser.serialize_keyword(#keyword);
