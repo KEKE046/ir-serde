@@ -243,12 +243,12 @@ pub fn ir_serde_derive(input: TokenStream) -> TokenStream {
             let fields_pat = extract_fields_pat(&fields);
             let (ser_impl, der_impl) = impl_fields(&mut fields);
             quote! {
-                impl<#extra_params #params> IRSerde #extra_ir_serde_generic for #ident<#param_names> where #(#wheres)* #other_wheres {
-                    fn ir_serialize(&self, ser: &mut dyn IRSerializer #extra_ir_serde_generic) {
+                impl<#extra_params #params> ir_serde::IRSerde #extra_ir_serde_generic for #ident<#param_names> where #(#wheres)* #other_wheres {
+                    fn ir_serialize(&self, ser: &mut dyn ir_serde::IRSerializer #extra_ir_serde_generic) {
                         let Self #fields_pat = self;
                         #ser_impl
                     }
-                    fn ir_deserialize(der: &mut dyn IRDeserializer #extra_ir_serde_generic) -> Result<Self, String> {
+                    fn ir_deserialize(der: &mut dyn ir_serde::IRDeserializer #extra_ir_serde_generic) -> Result<Self, String> {
                         #der_impl
                         Ok(Self #fields_pat)
                     }
@@ -285,11 +285,11 @@ pub fn ir_serde_derive(input: TokenStream) -> TokenStream {
                 });
             }
             quote! {
-                impl<#extra_params #params> IRSerde #extra_ir_serde_generic for #ident<#param_names> where #(#wheres)* #other_wheres {
-                    fn ir_serialize(&self, ser: &mut dyn IRSerializer #extra_ir_serde_generic) {
+                impl<#extra_params #params> ir_serde::IRSerde #extra_ir_serde_generic for #ident<#param_names> where #(#wheres)* #other_wheres {
+                    fn ir_serialize(&self, ser: &mut dyn ir_serde::IRSerializer #extra_ir_serde_generic) {
                         match self { #(#ser),* }
                     }
-                    fn ir_deserialize(der: &mut dyn IRDeserializer #extra_ir_serde_generic) -> Result<Self, String> {
+                    fn ir_deserialize(der: &mut dyn ir_serde::IRDeserializer #extra_ir_serde_generic) -> Result<Self, String> {
                         let keyword = der.peek()?.1;
                         match keyword {
                             #(#der),*
